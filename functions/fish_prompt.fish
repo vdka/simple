@@ -44,13 +44,15 @@ function fish_prompt -d "Simple Fish Prompt"
     # Current Working Directory
     #
 
-    set parent_dir (basename (dirname "$PWD"))
+    set parent_dir (dirname "$PWD")
     set current_dir (basename "$PWD")
 
     # A loose match for $HOME
-    if test "$parent_dir" = (basename "$HOME")
+    if test "$parent_dir" = "$HOME"
         set parent_dir "~"
     end
+
+    set parent_dir (basename $parent_dir)
 
     # vdka/json
     set pwd_string "$parent_dir/$current_dir"
