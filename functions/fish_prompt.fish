@@ -17,30 +17,56 @@ function __print_color
 end
 
 function fish_prompt -d "Simple Fish Prompt"
-    echo -e ""
+    echo -sn " "
 
     # User
     #
-    set -l user (id -un $USER)
-    __print_color FF7676 "$user"
+
+    if test ! -z "$SSH_CLIENT"
+        set -l user (id -un $USER)
+        __print_color FF7676 "$user"
 
 
-    # Host
+        # Host
+        #
+        set -l host_name (hostname -s)
+        set -l host_glyph " at "
+
+        __print_color ffffff "$host_glyph"
+        __print_color F6F49D "$host_name"
+
+
+        # Only print the " in " if we are on a remote machine
+        set -l pwd_glyph " in "
+        __print_color ffffff "$pwd_glyph"
+    end
+
+    # Current Working Directory
     #
-    set -l host_name (hostname -s)
-    set -l host_glyph " at "
 
-    __print_color ffffff "$host_glyph"
-    __print_color F6F49D "$host_name"
+    set parent_dir (basename (dirname "$PWD"))
+    set current_dir (basename "$PWD")
+
+    # A loose match for $HOME
+    if test "$parent_dir" = (basename "$HOME")
+        set parent_dir "~"
+    end
+
+    # vdka/json
+    set pwd_string "$parent_dir/$current_dir"
+
+    if test "$PWD" = ~
+        set pwd_string "~"
+    end
+
+    echo -sn "$dir"
+    echo -sn "$color_normal" #reset
 
 
-    # Current working directory
-    #
-    set -l pwd_glyph " in "
-    set -l pwd_string (echo $PWD | sed 's|^'$HOME'\(.*\)$|~\1|')
 
-    __print_color ffffff "$pwd_glyph"
-    __print_color 5DAE8B "$pwd_string"
+    #set -l pwd_string (echo $PWD | sed 's|^'$HOME'\(.*\)$|~\1|')
+
+    __print_color  00A963 "$pwd_string"
 
 
     # Git
@@ -51,7 +77,7 @@ function fish_prompt -d "Simple Fish Prompt"
         set -l git_branch_glyph
 
         __print_color ffffff "$git_glyph"
-        __print_color 6597ca "$branch_name"
+        __print_color 8162D2 "$branch_name"
 
         if git_is_touched
             if git_is_staged
@@ -79,5 +105,12 @@ function fish_prompt -d "Simple Fish Prompt"
         end
     end
 
-    __print_color FF7676 "\n❯ "
+    if test -e .swift-version
+        if set swift_version (cat .swift-version | ack -o '(?<=-)(\d\d-\d\d)')
+            __print_color ffffff " using "
+            __print_color FCA03C "$swift_version"
+        end
+    end
+
+    __print_color EEEEFF " ❯ "
 end
