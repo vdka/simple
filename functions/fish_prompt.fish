@@ -17,7 +17,13 @@ function __print_color
 end
 
 function fish_prompt -d "Simple Fish Prompt"
-    echo -sn " "
+  set fish_color_error "929292"
+  set fish_color_command "DFDFDF"
+  set fish_color_normal "C5C5C5"
+  set fish_color_valid_path "C5C5C5"
+  set fish_color_param "8F8F8F"
+  set fish_color_operator "8F8F8F"
+  set fish_color_search_match "018752"
 
     # User
     #
@@ -32,13 +38,13 @@ function fish_prompt -d "Simple Fish Prompt"
         set -l host_name (hostname -s)
         set -l host_glyph " at "
 
-        __print_color ffffff "$host_glyph"
+        __print_color C5C5C5 "$host_glyph"
         __print_color F6F49D "$host_name"
 
 
         # Only print the " in " if we are on a remote machine
         set -l pwd_glyph " in "
-        __print_color ffffff "$pwd_glyph"
+        __print_color C5C5C5 "$pwd_glyph"
     end
 
     # Current Working Directory
@@ -68,7 +74,9 @@ function fish_prompt -d "Simple Fish Prompt"
 
     #set -l pwd_string (echo $PWD | sed 's|^'$HOME'\(.*\)$|~\1|')
 
-    __print_color  00A963 "$pwd_string"
+    # __print_color 00A963 "$pwd_string"
+    # __print_color 2ECC71 "$pwd_string"
+    __print_color 018752 "$pwd_string"
 
 
     # Git
@@ -77,23 +85,50 @@ function fish_prompt -d "Simple Fish Prompt"
         set -l branch_name (git_branch_name)
         set -l git_glyph " on "
         set -l git_branch_glyph
+        set -l git_branch_glyph_color "FFF"
 
-        __print_color ffffff "$git_glyph"
-        __print_color 8162D2 "$branch_name"
+        # set git_branch_color "8162D2"
+        # set git_branch_color "00AEB3"
+        # set git_branch_color "7CB82F"
+        set git_branch_color "0D8489"
 
         if git_is_touched
-            if git_is_staged
-                if git_is_dirty
-                    set git_branch_glyph " [±]"
-                else
-                    set git_branch_glyph " [+]"
-                end
+          if git_is_staged
+            if git_is_dirty
+              # set git_branch_color "8D6CAB" # Some files staged, some dirty
+              set git_branch_glyph_color "D0021B"
+              set git_branch_glyph "*"
             else
-                set git_branch_glyph " [?]"
+              # set git_branch_color "EDB220" # All files staged
+              set git_branch_glyph_color "5CE6CD"
+              set git_branch_glyph "*"
             end
+          else
+            # set git_branch_color "E68523"
+            set git_branch_glyph_color "F5A623"
+            set git_branch_glyph "*"
+          end
         end
 
-        __print_color 6597ca "$git_branch_glyph"
+        __print_color C5C5C5 "$git_glyph"
+        # __print_color 8162D2 "$branch_name"
+        __print_color $git_branch_color "$branch_name"
+
+        # if git_is_touched
+        #     if git_is_staged
+        #         if git_is_dirty
+        #             set git_branch_glyph " [±]"
+        #         else
+        #             set git_branch_glyph " [+]"
+        #         end
+        #     else
+        #         # set git_branch_glyph "°"
+        #         # set git_branch_glyph "˜"
+        #         set git_branch_glyph "־"
+        #     end
+        # end
+
+        __print_color $git_branch_glyph_color "$git_branch_glyph"
 
         if __git_upstream_configured
              set -l git_ahead (command git rev-list --left-right --count HEAD...@"{u}" ^ /dev/null | awk '
@@ -107,12 +142,8 @@ function fish_prompt -d "Simple Fish Prompt"
         end
     end
 
-    if test -e .swift-version
-        if set swift_version (cat .swift-version | ack -o '(?<=-)(\d\d-\d\d)')
-            __print_color ffffff " using "
-            __print_color FCA03C "$swift_version"
-        end
-    end
+    __print_color C5C5C5 " using "
+    __print_color DD5143 (rbenv version | awk '{print $1}')
 
-    __print_color EEEEFF " ❯ "
+    __print_color C5C5C5 " "
 end

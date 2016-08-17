@@ -1,6 +1,6 @@
 function fish_right_prompt
     set -l status_copy $status
-    set -l status_color 0fc
+    set -l status_color 8A8A8A
 
     if test "$status_copy" -ne 0
         set status_color f30
