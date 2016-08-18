@@ -68,7 +68,7 @@ function fish_prompt -d "Simple Fish Prompt"
 
     #set -l pwd_string (echo $PWD | sed 's|^'$HOME'\(.*\)$|~\1|')
 
-    __print_color  00A963 "$pwd_string"
+    __print_color 018752 "$pwd_string"
 
 
     # Git
@@ -79,18 +79,24 @@ function fish_prompt -d "Simple Fish Prompt"
         set -l git_branch_glyph
 
         __print_color ffffff "$git_glyph"
-        __print_color 8162D2 "$branch_name"
+        __print_color 0d8489 "$branch_name"
 
         if git_is_touched
-            if git_is_staged
-                if git_is_dirty
-                    set git_branch_glyph " [±]"
-                else
-                    set git_branch_glyph " [+]"
-                end
+          if git_is_staged
+            if git_is_dirty
+              # set git_branch_color "8D6CAB" # Some files staged, some dirty
+              set git_branch_glyph_color "D0021B"
+              set git_branch_glyph " *"
             else
-                set git_branch_glyph " [?]"
+              # set git_branch_color "EDB220" # All files staged
+              set git_branch_glyph_color "5CE6CD"
+              set git_branch_glyph " *"
             end
+          else
+            # set git_branch_color "E68523"
+            set git_branch_glyph_color "F5A623"
+            set git_branch_glyph " *"
+          end
         end
 
         __print_color 6597ca "$git_branch_glyph"
@@ -114,5 +120,5 @@ function fish_prompt -d "Simple Fish Prompt"
         end
     end
 
-    __print_color EEEEFF " ❯ "
+    __print_color EEEEFF " "
 end
