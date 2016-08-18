@@ -47,9 +47,10 @@ function fish_prompt -d "Simple Fish Prompt"
     set parent_dir (dirname "$PWD")
     set current_dir (basename "$PWD")
 
-    # A loose match for $HOME
     if test "$parent_dir" = "$HOME"
         set parent_dir "~"
+    else if test "$parent_dir" = "/"
+        set parent_dir ""
     end
 
     set parent_dir (basename $parent_dir)
@@ -59,6 +60,8 @@ function fish_prompt -d "Simple Fish Prompt"
 
     if test "$PWD" = ~
         set pwd_string "~"
+    else if test "$PWD" = "/"
+        set pwd_string "/"
     end
 
     echo -sn "$dir"
@@ -116,7 +119,7 @@ function fish_prompt -d "Simple Fish Prompt"
     if test -e .swift-version
         if set swift_version (cat .swift-version | ack -o '(?<=-)(\d\d-\d\d)')
             __print_color ffffff " using "
-            __print_color FCA03C "$swift_version"
+            __print_color F5871F "$swift_version"
         end
     end
 
