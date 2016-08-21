@@ -119,9 +119,7 @@ function fish_prompt -d "Simple Fish Prompt"
       end
     end
 
-    if git_is_stashed
-      __print_color C5C5C5 (__git_stashed)
-    end
+    __print_color C5C5C5 (__git_stashed)
   end
 
   # -- LANGUAGE VERSIONS ---------------------------------------------------- #
